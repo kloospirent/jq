@@ -1,6 +1,7 @@
 FROM debian:9
 
 ENV installdir /opt
+ENV outdir /code
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -8,6 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8
 
 RUN mkdir -p ${installdir}
+RUN mkdir -p ${outdir}
 
 # get dependencies, build, and remove anything we don't need for running jq.
 # valgrind seems to have trouble with pthreads TLS so it's off.
