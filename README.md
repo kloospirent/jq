@@ -73,3 +73,21 @@ cross-compilation environment.  See also
 the wiki.
 
 Send questions to https://stackoverflow.com/questions/tagged/jq or to the #jq channel (http://irc.lc/freenode/%23jq/) on Freenode (https://webchat.freenode.net/).
+
+Docker
+==
+To build jq using Docker, pull the Dockerfile, gen-jq.sh, start-jq.sh, and build-docker.sh files to a linux environment with docker.
+Then simply run:
+
+    sudo ./build-docker.sh
+    sudo ./gen-jq.sh
+    
+You should see the jq binary in your local directory.
+
+If you want to test changes, copy your files into a directory {foo} and run:
+
+    sudo ./build-docker.sh
+    sudo OUT_DIR=foo ./start-jq.sh
+    
+You will brought into the docker container. From here, copy the code from the /code directory into /opt/jq which is where the source code pulled from the master git is. Once your code changes are copied over, run make and make install to generate the jq binary. You can then copy the jq binary into the /code directory and exit the container. You will then see the new jq binary in your {foo} directory.
+
