@@ -1,21 +1,19 @@
-FROM debian:9
+FROM ubuntu:16.04
 
 ENV installdir /opt
-ENV outdir /code
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    DEBCONF_NONINTERACTIVE_SEEN=true \
-    LC_ALL=C.UTF-8 \
+ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
 RUN mkdir -p ${installdir}
-RUN mkdir -p ${outdir}
+
+ENV CC=/export/crosstools/spirent-yocto-1.5/x86_64/bin/x86_64-gcc
 
 # get dependencies, build, and remove anything we don't need for running jq.
 # valgrind seems to have trouble with pthreads TLS so it's off.
 
-RUN cd ${installdir} && \
-    apt-get update && \
+# setup build environment
+RUN apt-get update && \
     apt-get install -y \
         build-essential \
         autoconf \
@@ -25,7 +23,16 @@ RUN cd ${installdir} && \
         flex \
         python3 \
         python3-pip \
-        wget && \
+        wget
+
+ENV ARTIFACTORY=http://artifactory.cal.ci.spirentcom.com/artifactory
+
+RUN mkdir -p /export/crosstools && \
+    wget $ARTIFACTORY/crosstools/crosstools-yocto-1.5-x86_64-gcc-8.2.0.tar.xz && \
+    tar -C /export/crosstools -xf crosstools-yocto-1.5-x86_64-gcc-8.2.0.tar.xz && \
+    rm crosstools-yocto-1.5-x86_64-gcc-8.2.0.tar.xz
+
+RUN cd ${installdir} && \
     pip3 install pipenv && \
     git clone https://github.com/SpirentOrion/jq.git && \
     cd jq && \
