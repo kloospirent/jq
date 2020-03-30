@@ -1,11 +1,13 @@
 FROM ubuntu:16.04
 
 ENV installdir /opt
+ENV outdir /code
 
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
 
 RUN mkdir -p ${installdir}
+RUN mkdir -p ${outdir}
 
 ENV CC=/export/crosstools/spirent-yocto-1.5/x86_64/bin/x86_64-gcc
 
